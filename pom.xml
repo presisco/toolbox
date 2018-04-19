@@ -29,7 +29,7 @@
 
     <build>
         <sourceDirectory>src/com/presisco/toolbox</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/test/com/presisco/lazyjdbc</testSourceDirectory>
+        <testSourceDirectory>${project.basedir}/test/com/presisco/toolbox</testSourceDirectory>
 
         <plugins>
             <plugin>
