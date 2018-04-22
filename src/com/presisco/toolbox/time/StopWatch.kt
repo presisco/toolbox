@@ -5,9 +5,9 @@ open class StopWatch {
     private var segmentState = State.BLANK
 
     private var startTime = 0L
-    private var endTime = 0L
+    private var endTime = startTime
     private var splitTime = startTime
-    private var segmentTime = 0L
+    private var segmentTime = startTime
 
     protected open fun now() = System.currentTimeMillis()
 
@@ -47,7 +47,7 @@ open class StopWatch {
         return duration
     }
 
-    fun durationFromStart(): Long {
+    fun currentDurationFromStart(): Long {
         if(watchState != State.TIMING)
             throw IllegalStateException("StopWatch not started!")
 
@@ -62,12 +62,25 @@ open class StopWatch {
         watchState = State.STOPPED
     }
 
+    fun durationFromStart(): Long {
+        if (watchState != State.STOPPED)
+            throw IllegalStateException("StopWatch not stopped!")
+
+        return endTime - startTime
+    }
+
+    fun restart() {
+        stop()
+        start()
+    }
+
     fun reset() {
         if(watchState == State.TIMING)
             throw IllegalStateException("StopWatch need to be stopped first!")
 
         startTime = 0
-        splitTime = 0
+        endTime = startTime
+        splitTime = startTime
         watchState = State.BLANK
     }
 
