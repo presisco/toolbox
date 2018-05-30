@@ -21,4 +21,14 @@ object FileToolbox {
         writer.write(data)
         writer.close()
     }
+
+    fun readFilenamesUnderDir(dirName: String, extension: String): MutableSet<String> {
+        val nameSet = mutableSetOf<String>()
+        val fileTree = File(dirName).walk()
+        fileTree.maxDepth(1)
+                .filter { it.isFile }.filter { it.extension == extension }
+                .forEach { nameSet.add(it.name) }
+
+        return nameSet
+    }
 }
