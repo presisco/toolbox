@@ -6,7 +6,7 @@
 
     <groupId>com.presisco</groupId>
     <artifactId>toolbox</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 
     <properties>
         <kotlin.version>1.2.30</kotlin.version>
@@ -28,8 +28,8 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>src/com/presisco/toolbox</sourceDirectory>
-        <testSourceDirectory>${project.basedir}/test/com/presisco/toolbox</testSourceDirectory>
+        <sourceDirectory>src/main/kotlin/com/presisco/toolbox</sourceDirectory>
+        <testSourceDirectory>src/test/kotlin/com/presisco/toolbox</testSourceDirectory>
 
         <plugins>
             <plugin>
