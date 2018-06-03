@@ -46,16 +46,35 @@ object StringToolbox {
         return sb.toString()
     }
 
-    fun servers2IPs(raws: Array<String>) = raws.map { it.substringBefore(':') }
-
-    fun servers2Ports(raws: Array<String>) = raws.map { it.substringAfter(':') }
-
-    fun servers2String(raws: Array<String>): String {
+    fun concat(data: Collection<*>, wrapper: String, seperator: String): String {
+        if (data.isEmpty())
+            return ""
         val sb = StringBuilder()
-        sb.append(raws[0])
-        for (i in 1.until(raws.size)) {
+        val iterator = data.iterator()
+        sb.append(wrapper)
+        sb.append(iterator.next().toString())
+        sb.append(wrapper)
+
+        while (iterator.hasNext()) {
+            sb.append(seperator)
+            sb.append(wrapper)
+            sb.append(iterator.next().toString())
+            sb.append(wrapper)
+        }
+
+        return sb.toString()
+    }
+
+    fun servers2IPs(raw: Array<String>) = raw.map { it.substringBefore(':') }
+
+    fun servers2Ports(raw: Array<String>) = raw.map { it.substringAfter(':') }
+
+    fun servers2String(raw: Array<String>): String {
+        val sb = StringBuilder()
+        sb.append(raw[0])
+        for (i in 1.until(raw.size)) {
             sb.append(',')
-            sb.append(raws[i])
+            sb.append(raw[i])
         }
         return sb.toString()
     }
