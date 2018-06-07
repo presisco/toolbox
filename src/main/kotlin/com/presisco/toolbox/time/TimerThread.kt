@@ -14,7 +14,10 @@ class TimerThread(
         var executeTime = 0L
         val stopWatch = StopWatch()
         while (isRunning) {
-            Thread.sleep(interval - executeTime)
+            val sleepInterval = interval - executeTime
+            if (sleepInterval > 5) {
+                Thread.sleep(sleepInterval)
+            }
             stopWatch.start()
             task()
             stopWatch.stop()
