@@ -9,7 +9,8 @@ class TelnetHelper(
         private val host: String,
         private val port: Int = 23,
         private val code: String = "",
-        private val bufferSize: Int = 4096
+        private val bufferSize: Int = 4096,
+        private val cmdIntervalMs: Long = 100
 ) {
     private val telnetClient = TelnetClient()
     private val keyboard: OutputStream
@@ -42,18 +43,23 @@ class TelnetHelper(
         }
     }
 
-    fun send(cmd: String, expect: String = "\n"): String {
-        keyboard.write("$cmd\n".toByteArray())
-        keyboard.flush()
-        return read(expect)
+    fun send(vararg cmdList: Pair<String, String>): String {
+        var output = ""
+        cmdList.forEach {
+            keyboard.write("${it.first}\n".toByteArray())
+            keyboard.flush()
+            output = read(it.second)
+            waitForMs(cmdIntervalMs)
+        }
+        return output
     }
 
     fun login(user: String, password: String): String {
         read("login:")
-        waitForMs(100)
-        send(user, "Password:")
-        waitForMs(100)
-        return send(password, "$user@")
+        waitForMs(cmdIntervalMs)
+        send(Pair(user, "Password:"))
+        waitForMs(cmdIntervalMs)
+        return send(Pair(password, "$user@"))
     }
 
     fun close() {
