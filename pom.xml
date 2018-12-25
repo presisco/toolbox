@@ -6,7 +6,7 @@
 
     <groupId>com.presisco</groupId>
     <artifactId>toolbox</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
 
     <properties>
         <kotlin.version>1.2.30</kotlin.version>
@@ -24,6 +24,12 @@
             <artifactId>kotlin-test-junit</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.6</version>
         </dependency>
     </dependencies>
 
