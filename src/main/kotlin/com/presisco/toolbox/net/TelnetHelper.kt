@@ -1,6 +1,5 @@
 package com.presisco.toolbox.net
 
-import com.presisco.toolbox.ArrayToolbox
 import org.apache.commons.net.telnet.TelnetClient
 import java.io.InputStream
 import java.io.OutputStream
@@ -29,13 +28,10 @@ class TelnetHelper(
 
     fun read(expect: String = "\n"): String {
         var offset = 0
-        val target = expect.toByteArray()
         while (true) {
             val count = screen.read(screenSpace, offset, bufferSize - offset)
             if (count > 0) {
-                println("string till now: ${String(screenSpace, 0, offset + count)}")
-                if (ArrayToolbox.contains(screenSpace, target, offset, offset + count - 1)) {
-                    println("returning...")
+                if (String(screenSpace, offset, count).contains(expect)) {
                     return String(screenSpace, 0, offset + count)
                 }
                 offset += count
