@@ -1,17 +1,16 @@
 import com.presisco.toolbox.net.TelnetHelper
-import org.junit.After
 import org.junit.Test
 
 class TelnetHelperTest {
-    private val telnetHelper = TelnetHelper("192.168.1.82")
-
     @Test
-    fun login() {
-        telnetHelper.login("buildbot", "plain")
+    fun readAIXFreeSpace() {
+        val telnetHelper = TelnetHelper("remote", 23)
+        telnetHelper.send("user", "plain")
+        telnetHelper.waitCmdInterval()
+        telnetHelper.clearBuffer()
+        telnetHelper.send("df -g /dev/archlv")
+        telnetHelper.waitCmdInterval()
+        println(telnetHelper.readRecording())
     }
 
-    @After
-    fun close() {
-        telnetHelper.close()
-    }
 }

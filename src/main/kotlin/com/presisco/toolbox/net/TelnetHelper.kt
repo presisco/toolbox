@@ -1,6 +1,7 @@
 package com.presisco.toolbox.net
 
 import org.apache.commons.net.telnet.TelnetClient
+import org.apache.commons.net.telnet.TelnetInputListener
 import java.io.BufferedWriter
 import java.io.InputStream
 
@@ -8,14 +9,18 @@ class TelnetHelper(
         private val host: String,
         private val port: Int = 23,
         private val code: String = "",
+        private val readBufferSize: Int = 32768,
         private val cmdIntervalMs: Long = 100
-) {
+) : TelnetInputListener {
     private val telnetClient = TelnetClient()
     private val keyboard: BufferedWriter
     private val screen: InputStream
+    private val readBuffer = ByteArray(readBufferSize)
+    private var bufferCursor = 0
 
     init {
         telnetClient.connect(host, port)
+        telnetClient.registerInputListener(this)
         keyboard = telnetClient.outputStream.bufferedWriter()
         screen = telnetClient.inputStream
     }
@@ -24,30 +29,22 @@ class TelnetHelper(
         Thread.sleep(cmdIntervalMs)
     }
 
-    fun read(expect: String): String {
-        val screenBuffer = StringBuffer()
-        while (true) {
-            val available = screen.available()
-            val buffer = ByteArray(available)
-            screen.read(buffer)
-            val newText = String(buffer)
-            screenBuffer.append(newText)
-
-            if (screenBuffer.contains(expect)) {
-                return screenBuffer.toString()
-            }
-        }
+    override fun telnetInputAvailable() {
+        readBuffer[bufferCursor++] = screen.read().toByte()
     }
 
-    fun send(vararg cmdList: Pair<String, String>): String {
-        val sb = StringBuilder()
+    fun clearBuffer() {
+        readBuffer.fill(0, 0, readBufferSize)
+    }
+
+    fun readRecording() = String(readBuffer, 0, bufferCursor)
+
+    fun send(vararg cmdList: String) {
         cmdList.forEach {
-            keyboard.write("${it.first}\n")
+            keyboard.write("$it\n")
             keyboard.flush()
-            sb.append(read(it.second))
             waitCmdInterval()
         }
-        return sb.toString()
     }
 
     fun close() {
