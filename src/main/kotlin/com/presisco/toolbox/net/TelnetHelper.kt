@@ -48,8 +48,6 @@ class TelnetHelper(
     }
 
     fun close() {
-        screen.close()
-        keyboard.close()
         telnetClient.unregisterInputListener()
         telnetClient.disconnect()
     }
